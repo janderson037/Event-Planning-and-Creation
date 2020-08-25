@@ -1,0 +1,96 @@
+echo "# Event-Planning-and-Creation" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/janderson037/Event-Planning-and-Creation.git
+git push -u origin master
+
+#this program allows the user to schedule an event, register attendees, and view the events that have been scheduled
+#a file will be created for the event and the registered attendees for the user
+
+#define a main menu function
+def menu():
+    #create an option where the user can input a choice
+    option = input("Please enter what you would like to do:\n"
+    "C - to create an event\n"
+    "R - to register attendees for the current event\n"
+    "V - to view the registered attendees\n"
+    "X - to exit the program\n"
+    "Please input your choice: ")
+    #create a while loop to keep asking until user inputs correct action
+    while option != "C" and option != "c" and option != "R" and option != "r" and option != "V" and option != "v" and option != "X" and option != "x":
+        print("\nI do not understand what you want.\n"
+        "Now, please enter your valid choice:\n")
+        option = input("Please enter what you would like to do:\n"
+        "C - to create an event\n"
+        "R - to register attendees for the current event\n"
+        "V - to view the registered attendees\n"
+        "X - to exit the program\n"
+        "Please input your choice: ")
+    #create an if statement for different options user can choose
+    if option == "X" or option == "x":
+        print("Well, it was a pleasure doing business with you!\n"
+        "Have a nice life!")
+    elif option == "C" or option == "c":
+        create()
+    elif option == "R" or option == "r":
+        register()
+    elif option == "V" or option == "v":
+        view()
+
+#define a function for creating an event
+def create():
+    event = input("\nWhat is the name of your event?: ")
+    with open("registration.txt", "w") as file:
+        file.write(event + "\n")
+        file.write("NAME, EMAIL" + "\n")
+    # call on menu function once finished with create() again
+    menu()
+
+#define a function for registering attendees
+def register():
+    #tell the user what the current event is
+    with open("registration.txt", "r") as file:
+        event = file.readline()
+        print("The current event is: ", event)
+    #ask for the attendee's name
+    attendees = input("Please enter the name of your attendee.  Or enter x to quit without saving: ")
+    #create an if statement so program only accepts name and not x to move on
+    if attendees == "x" or attendees == "X":
+        menu()
+        return
+    else:
+         #ask for the attendee's email
+        email = input("Please enter the attendee's email.  It must be a valid @ucr.edu email: ")
+        #create a while loop to only take valid email
+        while (not email.endswith("@ucr.edu")):
+            print("\nThat is an incorrect email.")
+            email = input("Please enter the attendee's email.  It must be a valid @ucr.edu email: ")
+    #write the name and email onto file
+    with open("registration.txt", "a") as file:
+        file.write(attendees + ", " + email + "\n")
+    # call on menu function once finished with register() again            
+    menu()
+
+#define a function to view event
+def view():
+    with open("registration.txt", "r") as file:
+        line = file.readline()
+        print("\nEvent: ", line)
+        line_number = 2
+        count = 0
+        for line in file:
+            if line_number >= 2:
+                total = line
+                first_part = total.split(",")[0]
+                second_part = total.split(",")[1]
+                print("{:<20s}{:^20s}".format(first_part, second_part))
+                count+= 1
+    # call on menu function once finished with view() again
+    menu()
+
+#create a main menu aesthetic 
+print("----------MAIN MENU----------")
+print("Welcome to the best registration program around! :)\n")
+#call on the menu function
+menu()
